@@ -19,6 +19,7 @@ def main():
         print("The total cards distributed so far are: " , distributedCards)
         finalList[n]=[playerCards]
         print ("Each of the players hands are:", finalList)
+        sendCardsToApp()
 
 def distributor(numberOfCards):
 
@@ -55,7 +56,9 @@ def distributor(numberOfCards):
         return playerCards
 
 
-
+def sendCardsToApp():
+    
+    print("send cards to app here")
 
 distributedCards = []
 playerCards = []
