@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>the poker project</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,620;1,9..144,520&family=Outfit:wght@340;480;580&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/app.css?v=3">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%23121614' width='32' height='32'/%3E%3Ctext y='24' x='6' font-size='22'%3E♠%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+  <header class="top">
+    <button class="brand" data-go="salon" type="button">the poker project</button>
+    <nav>
+      <button type="button" data-go="models">Models</button>
+      <button type="button" data-go="friends">Friends</button>
+      <button type="button" data-go="dealer">Live dealer</button>
+      <button type="button" data-go="table" id="nav-table" hidden>Table</button>
+    </nav>
+  </header>
+  <div id="toast" hidden></div>
+
+  <main id="salon" class="view">
+    <div class="salon-top">
+      <section class="salon-copy">
+        <p class="eyebrow">Texas hold'em</p>
+        <h1>Three tables, same rules.</h1>
+        <p class="lede">Models, a room code for friends, or a dealer sitting next to a real deck. Betting, blinds, and showdowns all come from one engine, so a raise means the same thing in every mode.</p>
+      </section>
+      <aside class="salon-stage" aria-hidden="true">
+        <div class="mini-felt">
+          <div class="mini-cards">
+            <div class="card red"><b>A</b><i>♥</i></div>
+            <div class="card black"><b>K</b><i>♠</i></div>
+          </div>
+          <div class="mini-chip">10</div>
+        </div>
+      </aside>
+    </div>
+    <div class="mode-notes">
+      <button type="button" id="go-models" data-go="models">
+        <span>Models</span>
+        <p>Seat up to five opponents and set each one: conservative, super casual, balanced, or reckless. Looseness, aggression, and bluff are separate sliders, so reckless can mean "plays too many hands" without also meaning "bluffs every street." Sit in yourself, or leave your chair empty and watch with every hole card face up.</p>
+        <p class="hard">Before the flop they judge the two cards. After it, they use the best five-card hand, then add a flush draw or an open-ended straight. The price of a call matters: a big bet into a weak pair gets folded by June and called by Marlow. A short all-in does not reopen the action for someone who already bet.</p>
+      </button>
+      <button type="button" id="go-friends" data-go="friends">
+        <span>Friends</span>
+        <p>Open a table and you get a four-letter code. Someone else joins from that code between hands, up to six seats. Hole cards stay hidden until showdown. Copy the invite and the other person lands on the join form with the code already filled in.</p>
+        <p class="hard">The server owns the hand. Both browsers only display what it sends, so two people cannot disagree about whose turn it is or what the pot is. If one player is all-in for less, their chips make a main pot and the extra bets go to a side pot they cannot win. An odd chip in a split goes to the seat closest to the left of the button.</p>
+      </button>
+      <button type="button" id="go-dealer" data-go="dealer">
+        <span>Live dealer</span>
+        <p>This mode does not deal. You name the seats at a real table, mark which one is you, and talk the hand through. "Alex raises to 60." "Flop ace of spades, king of hearts, seven of clubs." It tracks stacks, the board, and the pot, then says bet, check, call, raise, or fold.</p>
+        <p class="hard">The suggestion comes from dealing the rest of the cards a few hundred times against the players still in, then comparing that win chance to the pot odds. The camera can guess a single card held up to the lens, and you confirm it before it counts. Speech and the rank buttons are the reliable path. Undo is there because a sentence gets heard wrong.</p>
+      </button>
+    </div>
+  </main>
+
+  <main id="models" class="view" hidden>
+    <section class="panel">
+      <p class="eyebrow">The models</p>
+      <h1>Who is sitting down</h1>
+      <p class="lede">Pick a style, then move the sliders if you want them looser, louder, or quieter.</p>
+      <div class="seat-you">
+        <label class="play-toggle" for="i-play">
+          <input type="checkbox" id="i-play" checked>
+          <span>I'll play</span>
+        </label>
+        <label class="field" for="your-name">Your name
+          <input id="your-name" value="You" maxlength="18">
+        </label>
+      </div>
+      <div id="model-list"></div>
+      <button type="button" id="add-model" class="text-btn">Add a model</button>
+      <div class="stakes">
+        <label>Buy-in <input id="buy-in" type="number" value="1000" min="20"></label>
+        <label>Small blind <input id="sb" type="number" value="10" min="1"></label>
+        <label>Big blind <input id="bb" type="number" value="20" min="2"></label>
+      </div>
+      <button type="button" id="open-table" class="gold">Open the table</button>
+      <p id="models-error" class="form-error"></p>
+    </section>
+  </main>
+
+  <main id="friends" class="view" hidden>
+    <section class="split">
+      <form id="host-form" class="panel">
+        <p class="eyebrow">Host</p>
+        <h1>Open a table</h1>
+        <label class="field">Your name <input id="host-name" maxlength="18" required></label>
+        <div class="stakes">
+          <label>Buy-in <input id="host-stack" type="number" value="1000" min="20"></label>
+          <label>Small <input id="host-sb" type="number" value="10" min="1"></label>
+          <label>Big <input id="host-bb" type="number" value="20" min="2"></label>
+        </div>
+        <button class="gold" type="submit">Create the room</button>
+      </form>
+      <form id="join-form" class="panel">
+        <p class="eyebrow">Join</p>
+        <h1>Sit with a code</h1>
+        <label class="field">Table code <input id="join-code" maxlength="4" autocomplete="off" required></label>
+        <label class="field">Your name <input id="join-name" maxlength="18" required></label>
+        <button class="gold" type="submit">Take a seat</button>
+      </form>
+    </section>
+    <p id="friends-error" class="form-error"></p>
+  </main>
+
+  <main id="table" class="view" hidden>
+    <div id="table-root"></div>
+  </main>
+
+  <main id="dealer" class="view" hidden>
+    <section id="dealer-setup" class="panel">
+      <p class="eyebrow">Live dealer</p>
+      <h1>Beside the real table</h1>
+      <p class="lede">Name the seats, then talk the hand through. Scan one card when you want a second opinion, and confirm it before it counts.</p>
+      <div id="dealer-players"></div>
+      <button type="button" id="add-seat" class="text-btn">Add a seat</button>
+      <div class="stakes">
+        <label>Stack <input id="dealer-stack" type="number" value="200" min="2"></label>
+        <label>Small <input id="dealer-sb" type="number" value="1" min="1"></label>
+        <label>Big <input id="dealer-bb" type="number" value="2" min="2"></label>
+      </div>
+      <button type="button" id="open-station" class="gold">Open the station</button>
+      <p id="dealer-error" class="form-error"></p>
+    </section>
+    <section id="dealer-station" class="station" hidden>
+      <div class="station-grid">
+        <div class="camera-frame">
+          <video id="cam" autoplay playsinline muted></video>
+          <canvas id="snap" hidden></canvas>
+          <div class="camera-actions">
+            <button type="button" id="scan">Scan a card</button>
+            <button type="button" id="mic">Listen</button>
+          </div>
+          <p id="heard" class="heard">Listening works in Chrome and Edge. You can also type.</p>
+          <form id="command-form">
+            <input id="command" placeholder="Alex calls, or flop ace of spades…" autocomplete="off">
+          </form>
+          <div id="scan-confirm" class="confirm" hidden>
+            <p>This looks like the <strong id="scan-name"></strong>.</p>
+            <div>
+              <button type="button" id="scan-hero">My card</button>
+              <button type="button" id="scan-board">Board</button>
+              <button type="button" id="scan-dismiss" class="text-btn">Dismiss</button>
+            </div>
+          </div>
+        </div>
+        <div>
+          <article class="advice" id="advice"></article>
+          <div id="dealer-table"></div>
+          <div class="picker">
+            <div id="ranks" class="ranks"></div>
+            <div id="suits" class="suits"></div>
+            <div class="picker-actions">
+              <button type="button" id="pick-hero">Give it to me</button>
+              <button type="button" id="pick-board">Put it on the board</button>
+              <button type="button" id="clear-hole" class="text-btn">Clear my cards</button>
+              <button type="button" id="clear-board" class="text-btn">Clear the board</button>
+              <button type="button" id="new-hand" class="text-btn">New hand</button>
+              <button type="button" id="undo" class="text-btn">Undo</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/pyodide/v0.26.4/full/pyodide.js"></script>
+  <script src="/assets/js/app.js"></script>
+</body>
+</html>
